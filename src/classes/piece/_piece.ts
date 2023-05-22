@@ -11,6 +11,7 @@ interface IMoveOffeset {
 }
 
 export default class PieceClass {
+    isFirstMoved: boolean = false;
     type: PieceTypes;
     color: Color;
     position: ICoordinates | null = null;
@@ -19,18 +20,22 @@ export default class PieceClass {
     constructor({
         color,
         type,
-        m,
+        moveOffeset,
     }: {
         color: Color,
         type: PieceTypes,
-        m: IMoveOffeset,
+        moveOffeset: IMoveOffeset,
     }) {
         this.type = type;
         this.color = color;
-        this.moveOffset = m;
+        this.moveOffset = moveOffeset;
     }
 
     toString() {
         return "hi";
+    }
+
+    move() {
+        this.isFirstMoved = true;
     }
 }

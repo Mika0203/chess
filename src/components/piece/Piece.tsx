@@ -8,6 +8,7 @@ const StyledPiece = styled.div<{ color: string, type: number, isShadow: boolean 
     height: 100%;
     background-repeat: no-repeat;
     background-size: 600%;
+    position: absolute;
     opacity: ${e => e.isShadow ? 0.3 : 1};
     background-position-x: ${e => `calc(100% * (${e.type}/5))`} ;
     background-position-y: ${e => `calc(100% * (${e.color === "W" ? 0 : 2}/2))`} ;

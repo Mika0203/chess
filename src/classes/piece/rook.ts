@@ -8,11 +8,13 @@ export default class Rook extends PieceClass {
         color: Color
     }) {
         super({
-            color: color, type: "R", m: {
-                down: -1,
-                left: -1,
-                right: -1,
-                up: -1,
+            color: color,
+            type: "R",
+            moveOffeset: {
+                down: 8,
+                left: 8,
+                right: 8,
+                up: 8,
             }
         });
     }

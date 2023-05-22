@@ -1,11 +1,9 @@
 import { styled } from "styled-components"
-import GameController from "../controllers/GameController";
 import Piece from "./piece/Piece";
 import ICoordinates from "../interfaces/Coordinates";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { onClick } from "../redux/slices/boardDataSlice";
-import { builtinModules } from "module";
-import { useEffect, useMemo, useState } from "react";
+import { move, onClick } from "../redux/slices/boardDataSlice";
+import { useMemo } from "react";
 
 const StyledBoard = styled.div`
     background-color: brown;
@@ -27,6 +25,7 @@ const Block = styled.div<{ y: number, x: number, selected: boolean, haspiece: bo
     height: 100%;
     background-color: ${e => (e.y + e.x) % 2 === 0 ? "skyblue" : "grey"};
     box-shadow: ${e => e.selected ? "inset 0px 0px 10px 10px rgba(0, 0, 0, 0.5)" : "none"};
+    position: relative;
 
     :hover {
         cursor: ${e => e.haspiece ? "pointer" : ""} ;
@@ -36,7 +35,16 @@ const Block = styled.div<{ y: number, x: number, selected: boolean, haspiece: bo
 
 export default function Board() {
     const disPatch = useAppDispatch();
-    const onClickBlock = (coordinates: ICoordinates) => disPatch(onClick(coordinates));
+    const onClickBlock = (coordinates: ICoordinates) => {
+        if (getIsDrawMove(coordinates) && selectedBlock !== null) {
+            disPatch(move({
+                from: selectedBlock,
+                to: coordinates,
+            }))
+        } else {
+            disPatch(onClick(coordinates))
+        }
+    };
 
     const pieceData = useAppSelector(state => state.boardDataSlice.pieceData)
     const selectedBlock = useAppSelector(state => state.boardDataSlice.selectedBlock);
@@ -46,14 +54,42 @@ export default function Board() {
         if (selecetdPiece === null) return [];
         if (selectedBlock === null) return [];
 
-        return [
-            {
-                x: selectedBlock.x + (selecetdPiece.moveOffset.right ?? 0),
-                y: selectedBlock.y + (selecetdPiece.moveOffset.up ?? 0),
-            }
-        ];
+        const arr: ICoordinates[] = [];
+
+
+        arr.push(...new Array(selecetdPiece.moveOffset.up ?? 0).fill(0).map((_, idx) => ({
+            x: selectedBlock.x,
+            y: selectedBlock.y + idx + 1,
+        })));
+        arr.push(...new Array(selecetdPiece.moveOffset.right ?? 0).fill(0).map((_, idx) => ({
+            x: selectedBlock.x + idx + 1,
+            y: selectedBlock.y,
+        })));
+        arr.push(...new Array(selecetdPiece.moveOffset.left ?? 0).fill(0).map((_, idx) => ({
+            x: selectedBlock.x - (idx + 1),
+            y: selectedBlock.y,
+        })));
+        arr.push(...new Array(selecetdPiece.moveOffset.down ?? 0).fill(0).map((_, idx) => ({
+            x: selectedBlock.x,
+            y: selectedBlock.y - (idx + 1),
+        })));
+        arr.push(...new Array(selecetdPiece.moveOffset.cross ?? 0).fill(0).map((_, idx) => ({
+            x: selectedBlock.x,
+            y: selectedBlock.y - (idx + 1),
+        })));
+        arr.push(...new Array(selecetdPiece.moveOffset.cross ?? 0).fill(0).map((_, idx) => ({
+            x: selectedBlock.x,
+            y: selectedBlock.y - (idx + 1),
+        })));
+
+        console.log(arr);
+        return arr;
 
     }, [selecetdPiece, selectedBlock]);
+
+    const getIsDrawMove = (coordinates: ICoordinates) => {
+        return !!movePoints.find(e => e.x === coordinates.x && e.y === coordinates.y);
+    }
 
     const Ranks = new Array(8).fill(0).map((_, y) => <Rank key={y}>
         {
@@ -63,10 +99,10 @@ export default function Board() {
                     ? pieceData[coordinates.y][coordinates.x]
                     : null;
 
-                const isDrawMove = !!movePoints.find(e => e.x === coordinates.x && e.y === coordinates.y);
+                const isDrawMove = getIsDrawMove(coordinates);
 
                 return <Block
-                    haspiece={(data !== null)}
+                    haspiece={(data !== null || isDrawMove)}
                     selected={selectedBlock?.x === x + 1 && selectedBlock.y === 8 - y}
                     onClick={() => onClickBlock(coordinates)}
                     y={y} x={x}

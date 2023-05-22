@@ -8,7 +8,7 @@ export default class Knight extends PieceClass {
         color: Color
     }) {
         super({
-            color: color, type: "Kn", m: {
+            color: color, type: "Kn", moveOffeset: {
                 down: 1,
                 left: 1,
                 right: 1,

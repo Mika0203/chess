@@ -8,12 +8,12 @@ export default class Queen extends PieceClass {
         color: Color
     }) {
         super({
-            color: color, type: "Q", m: {
-                cross: -1,
-                down: -1,
-                left: -1,
-                right: - 1,
-                up: -1,
+            color: color, type: "Q", moveOffeset: {
+                cross: 8,
+                down: 8,
+                left: 8,
+                right: 8,
+                up: 8,
             }
         });
     }

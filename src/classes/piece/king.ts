@@ -8,7 +8,7 @@ export default class King extends PieceClass {
         color: Color
     }) {
         super({
-            color: color, type: "K", m: {
+            color: color, type: "K", moveOffeset: {
                 cross: 1,
                 down: 1,
                 left: 1,

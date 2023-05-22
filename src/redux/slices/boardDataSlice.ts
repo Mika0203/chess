@@ -7,7 +7,6 @@ import Knight from "../../classes/piece/knight";
 import Bishop from "../../classes/piece/bishop";
 import Queen from "../../classes/piece/queen";
 import King from "../../classes/piece/king";
-import { stat } from "fs";
 
 
 interface LinePieceData {
@@ -81,7 +80,6 @@ const boardDataSlice = createSlice({
         onClick: (state, { payload }: {
             payload: ICoordinates,
         }) => {
-
             if (Object.hasOwn(state.pieceData, payload.y)) {
                 state.selectedBlock = payload;
                 state.selectedPiece = state.pieceData[payload.y][payload.x];
@@ -90,10 +88,29 @@ const boardDataSlice = createSlice({
                 state.selectedPiece = null;
                 state.selectedBlock = null;
             }
+        },
 
+        move: (state, { payload }: {
+            payload: {
+                from: ICoordinates,
+                to: ICoordinates,
+            }
+        }) => {
+            if (Object.hasOwn(state.pieceData, payload.from.y)) {
+                if (!Object.hasOwn(state.pieceData, payload.to.y)) {
+                    state.pieceData[payload.to.y] = {}
+                }
+
+                state.pieceData[payload.to.y][payload.to.x] = state.pieceData[payload.from.y][payload.from.x];
+                state.pieceData[payload.from.y][payload.from.x] = null;
+
+                state.pieceData[payload.to.y][payload.to.x]!.move();
+                state.selectedPiece = null;
+                state.selectedBlock = null;
+            }
         }
     }
 })
 
-export const { onClick } = boardDataSlice.actions;
+export const { onClick, move } = boardDataSlice.actions;
 export default boardDataSlice.reducer;
