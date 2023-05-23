@@ -1,5 +1,5 @@
 import Color from "../../interfaces/color.interface";
-import PieceClass from "./_piece";
+import PieceClass from "./_pieceClass";
 
 export default class King extends PieceClass {
     constructor({

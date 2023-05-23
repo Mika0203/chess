@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import PieceClass from "../classes/piece/_piece";
+import PieceClass from "../classes/piece/_pieceClass";
 import ICoordinates from "../interfaces/Coordinates";
 
 export default function useMovePoints({

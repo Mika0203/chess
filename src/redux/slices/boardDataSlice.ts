@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import ICoordinates from "../../interfaces/Coordinates";
 import Pawn from "../../classes/piece/pawn";
-import PieceClass from "../../classes/piece/_piece";
+import PieceClass from "../../classes/piece/_pieceClass";
 import Rook from "../../classes/piece/rook";
 import Knight from "../../classes/piece/knight";
 import Bishop from "../../classes/piece/bishop";
@@ -9,15 +9,13 @@ import Queen from "../../classes/piece/queen";
 import King from "../../classes/piece/king";
 
 
-interface LinePieceData {
-    [number: number]: null | PieceClass;
+export interface IPieceData {
+    [number: number]: {
+        [number: number]: null | PieceClass
+    }
 }
 
-interface L2Data {
-    [number: number]: LinePieceData
-}
-
-const defaultPieceData: L2Data = {
+const defaultPieceData: IPieceData = {
     1: {
         1: new Rook({ color: "W" }),
         2: new Knight({ color: "W" }),
@@ -65,7 +63,7 @@ const initialState: {
     text: string | null,
     selectedBlock: ICoordinates | null,
     selectedPiece: PieceClass | null,
-    pieceData: L2Data,
+    pieceData: IPieceData,
 } = {
     text: null,
     selectedBlock: null,
@@ -96,15 +94,21 @@ const boardDataSlice = createSlice({
                 to: ICoordinates,
             }
         }) => {
-            if (Object.hasOwn(state.pieceData, payload.from.y)) {
-                if (!Object.hasOwn(state.pieceData, payload.to.y)) {
-                    state.pieceData[payload.to.y] = {}
+            const from = payload.from;
+            const to = payload.to;
+
+            if (Object.hasOwn(state.pieceData, from.y)) {
+                if (!Object.hasOwn(state.pieceData, to.y)) {
+                    state.pieceData[to.y] = {}
                 }
 
-                state.pieceData[payload.to.y][payload.to.x] = state.pieceData[payload.from.y][payload.from.x];
-                state.pieceData[payload.from.y][payload.from.x] = null;
+                if (state.pieceData[to.y][to.x] != null && state.pieceData[to.y][to.x]!.color === state.pieceData[from.y][from.x]!.color) {
+                    return;
+                }
 
-                state.pieceData[payload.to.y][payload.to.x]!.move();
+                state.pieceData[to.y][to.x] = state.pieceData[from.y][from.x];
+                state.pieceData[from.y][from.x] = null;
+                state.pieceData[to.y][to.x]!.move();
                 state.selectedPiece = null;
                 state.selectedBlock = null;
             }

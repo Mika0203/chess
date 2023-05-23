@@ -82,7 +82,7 @@ export default function Board() {
                     y={y} x={x}
                     key={y + x}>
                     {(isDrawMove && selectedPiece && data === null) && <Piece isShadow={true} piece={selectedPiece} />}
-                    {data && <Piece piece={data} isUnderAttack={isDrawMove} />}
+                    {data && <Piece piece={data} isUnderAttack={isDrawMove && selectedPiece?.color !== data.color} />}
                 </Block>
             })
         }

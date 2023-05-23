@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import { useMemo } from "react";
-import PieceClass from "../../classes/piece/_piece";
+import PieceClass from "../../classes/piece/_pieceClass";
 
 const StyledPiece = styled.div<{ color: string, type: number }>`
     background-image: url('/images/sprite.png');
