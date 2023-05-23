@@ -8,7 +8,10 @@ export default class Bishop extends PieceClass {
         color: Color
     }) {
         super({
-            color: color, type: "B", moveOffeset: {
+            point: 3,
+            color: color,
+            type: "B",
+            moveOffeset: {
                 cross: 8,
             }
         });

@@ -3,10 +3,7 @@ import Color from "../../interfaces/color.interface";
 import PieceTypes from "../../interfaces/piece";
 
 interface IMoveOffeset {
-    up?: number | null,
-    down?: number | null,
-    right?: number | null,
-    left?: number | null,
+    verHor?: number | null,
     cross?: number | null,
 }
 
@@ -14,6 +11,7 @@ export default class PieceClass {
     isFirstMoved: boolean = false;
     type: PieceTypes;
     color: Color;
+    point: number;
     position: ICoordinates | null = null;
     moveOffset: IMoveOffeset;
 
@@ -21,14 +19,17 @@ export default class PieceClass {
         color,
         type,
         moveOffeset,
+        point,
     }: {
         color: Color,
         type: PieceTypes,
         moveOffeset: IMoveOffeset,
+        point: number,
     }) {
         this.type = type;
         this.color = color;
         this.moveOffset = moveOffeset;
+        this.point = point;
     }
 
     toString() {

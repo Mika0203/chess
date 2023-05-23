@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { useMemo } from "react";
 import PieceClass from "../../classes/piece/_piece";
 
-const StyledPiece = styled.div<{ color: string, type: number, isShadow: boolean }>`
+const StyledPiece = styled.div<{ color: string, type: number, isShadow: boolean, isUnderAttack: boolean }>`
     background-image: url('/images/sprite.png');
     width: 100%;
     height: 100%;
@@ -12,16 +12,19 @@ const StyledPiece = styled.div<{ color: string, type: number, isShadow: boolean 
     opacity: ${e => e.isShadow ? 0.3 : 1};
     background-position-x: ${e => `calc(100% * (${e.type}/5))`} ;
     background-position-y: ${e => `calc(100% * (${e.color === "W" ? 0 : 2}/2))`} ;
+    background-color: ${e => e.isUnderAttack ? "red" : "transparent"};
 `;
 
 
 
 export default function Piece({
     piece,
+    isUnderAttack = false,
     isShadow = false,
 }: {
     piece: PieceClass,
     isShadow?: boolean,
+    isUnderAttack?: boolean,
 }) {
     const type = useMemo(() => {
         switch (piece.type) {
@@ -35,6 +38,6 @@ export default function Piece({
         }
     }, [piece.type]);
 
-    return <StyledPiece type={type} color={piece.color} isShadow={isShadow}>
+    return <StyledPiece type={type} color={piece.color} isShadow={isShadow} isUnderAttack={isUnderAttack}>
     </StyledPiece>
 }

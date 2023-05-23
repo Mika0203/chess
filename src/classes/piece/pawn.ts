@@ -9,14 +9,15 @@ export default class Pawn extends PieceClass {
         color: Color
     }) {
         super({
+            point: 1,
             color: color, type: "P",
             moveOffeset: {
-                up: 2,
+                verHor: 2,
             }
         });
     }
 
     move() {
-        this.moveOffset.up = 1;
+        this.moveOffset.verHor = 1;
     }
 }
